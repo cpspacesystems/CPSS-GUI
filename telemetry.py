@@ -8,8 +8,8 @@ import serial
 
 from util import get_cfg
 
-#defining the order of the packets to be sent
-PACKETS = [
+#defining the order of the items in packet to be sent
+PACKET_ITEMS = [
     "battery",
     "latitude",
     "longitude",
@@ -26,17 +26,18 @@ PACKETS = [
     "magnetometer_Y",
     "magnetometer_Z"
 ]
-
 ## generaitng format string from indices
 fstring = "telemetry "
-for i, var in enumerate(PACKETS):
+for i, var in enumerate(PACKET_ITEMS):
     fstring += var + "={{{0}}},".format(i)
 fstring = fstring[:-1]
 
-print(fstring)
-
+# for calculating packet loss
 def relay_data(cfg):
     """ Loads data from serial port into Influx Database"""
+    dropped_packets = 0
+    total_packets = 0
+
     # setting up serial connection
     ser = serial.Serial(cfg.port, cfg.rate, timeout=1)
 
@@ -45,12 +46,35 @@ def relay_data(cfg):
 
         while True:
             # getting serial data
-            line =  ser.readline()
-            vars = [ float(v) for v in line.split(b',')[:-1] ]
-            print(vars)
-            if (vars):
+            try:
+                line =  ser.readline()
+                total_packets += 1
+            except Exception:
+                print("Serial connection lost. Reconnecting...")
+                # trying to connect again
+                try:
+                    ser = serial.Serial(cfg.port, cfg.rate, timeout=1)
+                except Exception:
+                    print("Could not reconnect. Exiting...")
+                    return
+
+            # parsing serial data
+            try:
+                vars = [ float(v) for v in line.split(b',')[:-1] ]
+            except ValueError:
+                dropped_packets+=1
+                print("Packet Dropped. Total Loss: {} packets".format(dropped_packets))
+
+            # sending data to influx
+            if (len(vars) == len(PACKET_ITEMS)):
                 log = fstring.format(*vars)
+                # writing sensor data
                 write_api.write(cfg.bucket, cfg.org, log)
+                # writing status data
+                write_api.write(cfg.bucket, cfg.org, "telemetry percent_dropped={}".format(dropped_packets/total_packets))
+            else:
+                dropped_packets += 1
+                print("Packet Dropped. Total Loss: {} packets".format(dropped_packets))
 
             time.sleep(1)
 
