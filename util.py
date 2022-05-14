@@ -25,8 +25,8 @@ def get_cfg():
     config = configparser.ConfigParser()
     config.read(args.cfg)
 
-    # setting defaults if unconfigured
-    args.url = args.url if args.url else config['DEFAULT']['url']
+    # setting defaults if unconfigured (change to or)
+    args.url = args.url or config['DEFAULT']['url']
     args.token = args.token if args.token else config['DEFAULT']['token']
     args.org = args.org if args.org else config['DEFAULT']['org']
     args.bucket = args.bucket if args.bucket else config['DEFAULT']['bucket']
