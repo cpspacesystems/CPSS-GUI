@@ -3,8 +3,8 @@
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-import time
 import serial
+import logging
 
 from util import get_cfg
 
@@ -49,12 +49,12 @@ def relay_data(cfg):
                     line =  ser.readline()
                     total_packets += 1
                 except Exception:
-                    print("Serial connection lost. Reconnecting...")
+                    logger.error("Serial connection lost. Reconnecting...")
                     # trying to connect again
                     try:
                         ser = serial.Serial(cfg.port, cfg.rate, timeout=1)
                     except Exception:
-                        print("Could not reconnect. Exiting...")
+                        logger.critical("Could not reconnect. Exiting...")
                         return
 
                 # parsing serial data
@@ -62,7 +62,7 @@ def relay_data(cfg):
                     vars = [ float(v) for v in line.split(b',')]
                     vars[0] = int(vars[0]) #id
                 except ValueError as e:
-                    print(line, ":", e)
+                    logger.warning("{0}:{1}".format(line, e))
                     vars = []
 
                 # sending data to influx
@@ -76,15 +76,30 @@ def relay_data(cfg):
                     # writing sensor data
                     write_api.write(cfg.bucket, cfg.org, log)
                     # writing status data
-                    write_api.write(cfg.bucket, cfg.org, "telemetry percent_dropped={}".format((total_packets - sent_packets)/total_packets))
+                    lost = total_packets - sent_packets
+                    write_api.write(cfg.bucket, cfg.org,
+                        "telemetry percent_dropped={}".format(lost/total_packets))
                     sent_packets += 1
-                    # print(log)
-                    # print(sent_packets, total_packets, first_id, vars[0])
+                    logger.info(log)
                 else:
-                    print("Bad data. Total Loss: {} packets".format(total_packets - sent_packets))
-                    print("Expected {} items, got {}".format(len(PACKET_ITEMS), len(vars)))
-                    print("Received: {}".format(vars))
+                    lost = total_packets - sent_packets
+                    logger.warning("Bad data. Total Loss: {} packets".format(lost))
+                    logger.debug("Expected {} items, got {}. Received: {}".format(len(PACKET_ITEMS), len(vars), vars))
 
 if __name__ == "__main__":
     cfg = get_cfg()
+
+    # logging.basicConfig(filename = cfg.logfile)
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.WARNING)
+    logger.addHandler(console_handler)
+
+    file_handler = logging.FileHandler(cfg.logfile)
+    file_handler.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+
     relay_data(cfg)
+    logging.shutdown()
