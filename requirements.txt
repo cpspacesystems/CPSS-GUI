@@ -1,0 +1,4 @@
+influxdb==5.3.1
+influxdb-client==1.28.0
+pyserial==3.5
+configparser==5.0.2

@@ -5,6 +5,8 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 import random
 import time
 
+## NOT STABLE ##
+
 # You can generate an API token from the "API Tokens Tab" in the UI
 token = "oNWe8ptCt_3Lx2_8Oc2oaG79yC-1-j2E5JpA9s-_agMsqKj7aTFsQ8MSEWhNlolQlLyz9i0NJzmk0oHvKQ2riA=="
 org = "CPSS"

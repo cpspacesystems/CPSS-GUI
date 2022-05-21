@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CPSS Telemetry Uplink</title>
+</head>
+<body>
+    <h1>CPSS Telemetry Uplink</h1>
+
+
+
+    <table width="100%" cellspacing="0" border >
+        <tr>
+            <th width="25%"> State </th>
+            <th width="25%"> Nose Cone </th>
+            <th width="25%"> Action A </th>
+            <th width="25%"> Action B </th>
+        </tr>
+        <tr align="center">
+            <td> {{form.state}} </td>
+            <td> {{form.nose_cone}}% </td>
+            <td> <i>{{ 'active' if form.action_A else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_B else 'inactive'}}</i>  </td>
+        </tr>
+        <tr align="center">
+            <td>
+                <form method="post">
+                    <select name="state" value= "{{request.form['state']}}" >
+                        <option value="STATE_1">STATE 1</option>
+                        <option value="STATE_2">STATE 2</option>
+                        <option value="STATE_3">STATE 3</option>
+                        <option value="STATE_4">STATE 4</option>
+                    </select>
+                <input type="submit" value="Enter">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="number" name="nose_cone" value="{{request.form['nose_cone']}}" max="100" min="0">
+                    <input type="submit" name="submit" value="Submit">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="action_A" value={{ 'deactivate' if form.action_A else 'activate'}}>
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="action_B" value={{ 'deactivate' if form.action_B else 'activate'}}>
+                </form>
+            </td>
+        </tr>
+    </table>
+    </form>
+</html>
