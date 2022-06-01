@@ -9,7 +9,17 @@
 <body>
     <h1>CPSS Telemetry Uplink</h1>
 
+    <form method="post">
+        <p>Port: {{request.form['port']}}</p>
+        <select name="port" value= "{{request.form['port']}}" >
+            {% for p in form.ports %}
+                <option value={{p}}>{{p}}</option>
+            {% endfor %}
+        </select>
+    <input type="submit" value="Select">
+    </form>
 
+    <br>
 
     <table width="100%" cellspacing="0" border >
         <tr>

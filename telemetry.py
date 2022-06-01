@@ -10,6 +10,15 @@ from util import get_cfg
 
 # for uplink
 import uplink.uplink as uplink
+""" Serial connection lost. Reconnecting...
+Traceback (most recent call last):
+  File "/Users/curtisbucher/Desktop/Clubs/CPSS-GUI/telemetry.py", line 126, in <module>
+    main()
+  File "/Users/curtisbucher/Desktop/Clubs/CPSS-GUI/telemetry.py", line 69, in main
+    relay_data(cfg, logger, write_api, ser, )
+  File "/Users/curtisbucher/Desktop/Clubs/CPSS-GUI/telemetry.py", line 98, in relay_data
+    vars = [ float(v) for v in line.split(b',')]
+UnboundLocalError: local variable 'line' referenced before assignment"""
 
 #defining the order of the items in packet to be sent
 PACKET_ITEMS = [
