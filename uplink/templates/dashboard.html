@@ -10,8 +10,8 @@
     <h1>CPSS Telemetry Uplink</h1>
 
     <form method="post">
-        <p>Port: {{request.form['port']}}</p>
-        <select name="port" value= "{{request.form['port']}}" >
+        <p>Port: {{form['port']}}</p>
+        <select name="port" value= "{{form['port']}}" >
             {% for p in form.ports %}
                 <option value={{p}}>{{p}}</option>
             {% endfor %}
@@ -23,43 +23,64 @@
 
     <table width="100%" cellspacing="0" border >
         <tr>
-            <th width="25%"> State </th>
-            <th width="25%"> Nose Cone </th>
-            <th width="25%"> Action A </th>
-            <th width="25%"> Action B </th>
+            <th width="12.5%"> Action A  </th>
+            <th width="12.5%"> Action B  </th>
+            <th width="12.5%"> Action C </th>
+            <th width="12.5%"> Action D </th>
+            <th width="12.5%"> Action E  </th>
+            <th width="12.5%"> Action F  </th>
+            <th width="12.5%"> Action G </th>
+            <th width="12.5%"> Action H </th>
         </tr>
         <tr align="center">
-            <td> {{form.state}} </td>
-            <td> {{form.nose_cone}}% </td>
-            <td> <i>{{ 'active' if form.action_A else 'inactive'}}</i> </td>
-            <td> <i>{{ 'active' if form.action_B else 'inactive'}}</i>  </td>
+            <td> <i>{{ 'active' if form['action_A'] else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_B else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_C else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_D else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_E else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_F else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_G else 'inactive'}}</i> </td>
+            <td> <i>{{ 'active' if form.action_H else 'inactive'}}</i> </td>
         </tr>
         <tr align="center">
             <td>
                 <form method="post">
-                    <select name="state" value= "{{request.form['state']}}" >
-                        <option value="STATE_1">STATE 1</option>
-                        <option value="STATE_2">STATE 2</option>
-                        <option value="STATE_3">STATE 3</option>
-                        <option value="STATE_4">STATE 4</option>
-                    </select>
-                <input type="submit" value="Enter">
+                    <input type="submit" name="A">
                 </form>
             </td>
             <td>
                 <form method="post">
-                    <input type="number" name="nose_cone" value="{{request.form['nose_cone']}}" max="100" min="0">
-                    <input type="submit" name="submit" value="Submit">
+                    <input type="submit" name="B">
                 </form>
             </td>
             <td>
                 <form method="post">
-                    <input type="submit" name="action_A" value={{ 'deactivate' if form.action_A else 'activate'}}>
+                    <input type="submit" name="C">
                 </form>
             </td>
             <td>
                 <form method="post">
-                    <input type="submit" name="action_B" value={{ 'deactivate' if form.action_B else 'activate'}}>
+                    <input type="submit" name="D">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="E">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="F">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="G">
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    <input type="submit" name="H">
                 </form>
             </td>
         </tr>

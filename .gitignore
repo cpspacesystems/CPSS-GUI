@@ -4,6 +4,7 @@ __pycache__/
 # Environments
 .env
 .venv
+.mypy_cache
 env/
 venv/
 ENV/
