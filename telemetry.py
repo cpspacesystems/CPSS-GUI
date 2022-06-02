@@ -35,6 +35,11 @@ PACKET_ITEMS = [
     "gyroY",
     "gyroZ",
     "velocityX",
+    "longitude",
+    "latitude",
+    "altitude",
+    "satellites",
+    "state",
 ]
 ## generaitng format string from indices
 fstring = "telemetry "
